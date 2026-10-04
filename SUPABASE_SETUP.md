@@ -1,6 +1,6 @@
 # Configuração do Supabase
 
-O site usa o Supabase para autenticação, catálogo partilhado e armazenamento de imagens. A chave `anon` é pública; as políticas RLS abaixo protegem as operações. Nunca coloque a chave `service_role` no site.
+O site usa o Supabase para autenticação, catálogo partilhado e armazenamento de imagens. A chave `anon` é pública; as políticas RLS abaixo protegem as operações. Nunca coloque a chave `service_role` no site..
 
 1. Crie um projeto em [supabase.com](https://supabase.com).
 2. No SQL Editor do projeto, execute o conteúdo de `SUPABASE_SETUP.sql`.
