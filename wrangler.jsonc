@@ -1,0 +1,22 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "passarinhos-fonte-longa",
+  "main": "./worker.js",
+  "compatibility_date": "2026-10-04",
+  "workers_dev": true,
+  "build": {
+    "command": "node scripts/build.mjs"
+  },
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  "vars": {
+    "SUPABASE_URL": "https://bgbhsrqgmxskgwuyemkr.supabase.co",
+    "SUPABASE_ANON_KEY": "sb_publishable_NOwoonbpG41lE_QZD-OcnA_BihKiEkl"
+  },
+  "observability": {
+    "enabled": true
+  }
+}

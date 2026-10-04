@@ -1,0 +1,19 @@
+{
+  "model": "gpt-5-nano",
+  "maxOutputTokens": 320,
+  "maxMessages": 8,
+  "maxMessageCharacters": 1200,
+  "maxRequestBytes": 10000,
+  "inventoryLimit": 30,
+  "retrievedKnowledgeLimit": 4,
+  "allowedTopics": [
+    "Aves atualmente disponíveis no catálogo, características e preços publicados.",
+    "Orientação geral sobre compatibilidade e reprodução apenas quando houver informação correspondente na base de conhecimento.",
+    "Informações do criatório, instalações e formas de contacto publicadas no site."
+  ],
+  "fallback": "Posso ajudar com as aves disponíveis e as informações do criatório. Não encontrei informação suficiente para responder com segurança a essa pergunta; fala connosco pelo WhatsApp ou telefone.",
+  "salesContact": {
+    "phone": "+351 930 693 910",
+    "whatsapp": "https://wa.me/351930693910"
+  }
+}

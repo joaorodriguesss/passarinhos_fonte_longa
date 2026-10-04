@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="pt-PT">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f3ec">
+    <meta name="description" content="Conheça as aves e as instalações do criatório Passarinhos da Fonte Longa.">
+    <title>Passarinhos da Fonte Longa | Catálogo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="supabase-app.js" defer></script>
+    <script src="chat-widget.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#inicio" aria-label="Passarinhos da Fonte Longa, início">
+        <img class="brand-logo" id="brand-logo" src="brand-logo.svg" alt="Passarinhos da Fonte Longa" >
+        <span class="brand-mark" id="brand-mark" aria-hidden="true" hidden>F<span>·</span>L</span>
+        <span class="brand-name" hidden>Passarinhos<br>da Fonte Longa</span>
+      </a>
+
+      <nav class="main-nav" role="tablist" aria-label="Navegação principal">
+        <button class="nav-tab is-active" id="tab-aves" type="button" role="tab" aria-selected="true" aria-controls="painel-aves" data-tab="aves">Aves disponíveis</button>
+        <button class="nav-tab" id="tab-instalacoes" type="button" role="tab" aria-selected="false" aria-controls="painel-instalacoes" data-tab="instalacoes" tabindex="-1">Instalações</button>
+        <button class="nav-tab" id="tab-contactos" type="button" role="tab" aria-selected="false" aria-controls="painel-contactos" data-tab="contactos" tabindex="-1">Contactos</button>
+      </nav>
+
+      <a class="header-contact" href="#contactos" data-open-tab="contactos">
+        <span>Fale connosco</span>
+        <span class="arrow-icon" aria-hidden="true">↗</span>
+      </a>
+    </header>
+
+    <main id="inicio">
+      <section class="tab-panel birds-panel" id="painel-aves" role="tabpanel" aria-labelledby="tab-aves" data-panel="aves">
+        <div class="intro-grid">
+          <div class="intro-copy">
+            <p class="eyebrow"><span class="eyebrow-dot"></span> CRIATÓRIO · PORTUGAL</p>
+            <h1>Passarinhos<br>da <em>Fonte Longa</em></h1>
+            <p class="intro-text">Aves criadas com tempo, cuidado e respeito pelo seu ritmo natural.</p>
+            <a class="text-link" href="#catalogo">Explorar aves <span aria-hidden="true">↓</span></a>
+          </div>
+          <div class="intro-photo">
+            <img id="cover-image" alt="Fotografia de capa do criatório" fetchpriority="high" hidden>
+            <div class="cover-placeholder" id="cover-placeholder">PASSARINHOS<br>DA FONTE LONGA</div>
+            <div class="photo-caption"><span>PEQUENAS ASAS, GRANDES PERSONALIDADES</span><span id="cover-counter">01 / 01</span></div>
+          </div>
+        </div>
+
+        <section class="catalog-section" id="catalogo" aria-labelledby="catalog-title">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">ENCONTRE O SEU COMPANHEIRO</p>
+              <h2 id="catalog-title">Aves disponíveis <span class="heading-count" id="bird-count">0</span></h2>
+            </div>
+            <p class="sample-note">Consulte as aves atualmente disponíveis no criatório.</p>
+          </div>
+
+          <form class="catalog-filters" id="bird-filters" aria-label="Filtrar e ordenar aves">
+            <label class="filter-control" for="filter-species">Espécie<select id="filter-species" name="species"><option value="">Todas</option></select></label>
+            <label class="filter-control" for="filter-mutation">Mutação<select id="filter-mutation" name="mutation"><option value="">Todas</option></select></label>
+            <label class="filter-control" for="filter-sex">Sexo<select id="filter-sex" name="sex"><option value="">Todos</option><option value="Macho">Macho</option><option value="Fêmea">Fêmea</option><option value="Indeterminado">Indeterminado</option></select></label>
+            <label class="filter-control" for="filter-age">Idade<select id="filter-age" name="age"><option value="">Todas</option><option value="up-to-6">Até 6 meses</option><option value="6-to-12">6 a 12 meses</option><option value="1-to-3">1 a 3 anos</option><option value="over-3">Mais de 3 anos</option><option value="unknown">Não indicada</option></select></label>
+            <label class="filter-control" for="filter-status">Disponibilidade<select id="filter-status" name="status"><option value="">Todas</option><option value="available">Disponível</option><option value="reserved">Reservada</option><option value="sold">Vendida</option></select></label>
+            <fieldset class="price-filter"><legend>Preço (€)</legend><label for="filter-price-min" class="visually-hidden">Preço mínimo</label><input id="filter-price-min" type="number" min="0" step="1" placeholder="Mín." inputmode="decimal"><span aria-hidden="true">–</span><label for="filter-price-max" class="visually-hidden">Preço máximo</label><input id="filter-price-max" type="number" min="0" step="1" placeholder="Máx." inputmode="decimal"></fieldset>
+            <label class="filter-control" for="filter-sort">Ordenar<select id="filter-sort" name="sort"><option value="newest">Mais recentes</option><option value="oldest">Mais antigas</option><option value="price-asc">Preço: crescente</option><option value="price-desc">Preço: decrescente</option></select></label>
+            <button class="filter-reset" id="filter-reset" type="reset">Limpar filtros</button>
+          </form>
+
+          <div class="bird-grid" id="bird-grid" aria-live="polite"></div>
+          <p class="empty-state" id="bird-empty">De momento, não existem aves disponíveis.</p>
+        </section>
+      </section>
+
+      <section class="tab-panel secondary-panel" id="painel-instalacoes" role="tabpanel" aria-labelledby="tab-instalacoes" data-panel="instalacoes" hidden>
+        <div class="page-heading">
+          <p class="eyebrow"><span class="eyebrow-dot"></span> O NOSSO ESPAÇO</p>
+          <h1>Um lugar para<br><em>crescerem bem.</em></h1>
+          <p class="intro-text">Instalações pensadas para o bem-estar, a segurança e o comportamento natural de cada ave.</p>
+        </div>
+        <div class="facility-grid" id="facility-grid"></div>
+        <p class="empty-state" id="facility-empty">Ainda não adicionou fotografias das instalações.</p>
+      </section>
+
+      <section class="tab-panel secondary-panel contact-panel" id="painel-contactos" role="tabpanel" aria-labelledby="tab-contactos" data-panel="contactos" hidden>
+        <div class="page-heading">
+          <p class="eyebrow"><span class="eyebrow-dot"></span> ESTAMOS POR AQUI</p>
+          <h1>Vamos falar<br><em>sobre aves?</em></h1>
+          <p class="intro-text">Tem alguma dúvida ou quer saber mais sobre uma ave? Envie-nos uma mensagem.</p>
+        </div>
+        <div class="contact-layout">
+          <div class="contact-details">
+            <div class="contact-item"><span class="contact-label">TELEFONE</span><a href="tel:+351930693910">+351 930 693 910</a></div>
+            <div class="contact-item"><span class="contact-label">EMAIL</span><a href="mailto:rodriguesjoao265ar@gmail.com">rodriguesjoao265ar@gmail.com</a></div>
+            <div class="contact-item"><span class="contact-label">MORADA</span><p>Rua da Fonte Longa, 230<br>Mogege, 4770-350 Vila Nova de Famalicão<br>Braga, Portugal</p></div>
+          </div>
+          <form class="contact-form" id="contact-form">
+            <label for="nome">O seu nome</label>
+            <input id="nome" name="nome" autocomplete="name" required placeholder="Como se chama?">
+            <label for="email">O seu email</label>
+            <input id="email" name="email" type="email" autocomplete="email" required placeholder="nome@exemplo.pt">
+            <label for="mensagem">Mensagem</label>
+            <textarea id="mensagem" name="mensagem" rows="4" required placeholder="Escreva aqui a sua mensagem..."></textarea>
+            <button class="submit-button" type="submit">Preparar email <span aria-hidden="true">↗</span></button>
+            <p class="form-hint" id="form-hint" aria-live="polite">O seu programa de email abrirá com a mensagem preenchida.</p>
+          </form>
+        </div>
+        <div class="map-section">
+          <div class="map-heading"><h2>Como chegar</h2><a class="text-link" href="https://www.google.com/maps/search/?api=1&query=Rua+da+Fonte+Longa%2C+230%2C+Mogege%2C+4770-350+Vila+Nova+de+Famalic%C3%A3o%2C+Braga%2C+Portugal" target="_blank" rel="noopener">Abrir no Google Maps <span aria-hidden="true">↗</span></a></div>
+          <iframe class="contact-map" title="Mapa da Rua da Fonte Longa, Mogege" src="https://www.google.com/maps?q=Rua+da+Fonte+Longa%2C+230%2C+Mogege%2C+4770-350+Vila+Nova+de+Famalic%C3%A3o%2C+Braga%2C+Portugal&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+        </div>
+      </section>
+    </main>
+
+    <dialog class="bird-dialog" id="bird-dialog" aria-labelledby="bird-dialog-title">
+      <button class="dialog-close" type="button" data-close-bird-dialog aria-label="Fechar detalhes">×</button>
+      <div class="bird-dialog-layout">
+        <div class="bird-dialog-gallery">
+          <div class="dialog-image-wrap">
+            <button class="gallery-arrow gallery-previous" type="button" id="bird-photo-previous" aria-label="Fotografia anterior">‹</button>
+            <img id="bird-dialog-image" alt="">
+            <button class="gallery-arrow gallery-next" type="button" id="bird-photo-next" aria-label="Fotografia seguinte">›</button>
+          </div>
+          <div class="bird-dialog-thumbnails" id="bird-dialog-thumbnails"></div>
+        </div>
+        <div class="bird-dialog-info">
+          <p class="bird-category" id="bird-dialog-species"></p>
+          <h2 id="bird-dialog-title"></h2>
+          <p class="bird-dialog-description" id="bird-dialog-description"></p>
+          <dl class="bird-attributes">
+            <div><dt>Sexo</dt><dd id="bird-dialog-sex"></dd></div>
+            <div><dt>Idade</dt><dd id="bird-dialog-age"></dd></div>
+            <div><dt>Preço</dt><dd id="bird-dialog-price"></dd></div>
+            <div><dt>Disponibilidade</dt><dd id="bird-dialog-status"></dd></div>
+          </dl>
+          <a class="submit-button whatsapp-button" id="bird-dialog-whatsapp" href="https://wa.me/351930693910" target="_blank" rel="noopener noreferrer">Perguntar pelo WhatsApp <span aria-hidden="true">↗</span></a>
+          <a class="submit-button bird-call-button" id="bird-dialog-call" href="tel:+351930693910">Ligar · +351 930 693 910 <span aria-hidden="true">↗</span></a>
+          <a class="text-link bird-email-link" id="bird-dialog-email" href="mailto:rodriguesjoao265ar@gmail.com">Enviar email <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </dialog>
+
+    <section class="admin-login-screen secondary-panel" id="admin-login-screen" hidden>
+      <div class="admin-login-content">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> ACESSO RESTRITO</p>
+        <h1>Área de<br><em>gestão.</em></h1>
+        <p class="intro-text">Inicia sessão com a conta autorizada para gerir o catálogo.</p>
+        <form class="contact-form" id="admin-login-form">
+          <label for="admin-email">Email</label>
+          <input id="admin-email" name="email" type="email" autocomplete="username" required>
+          <label for="admin-password">Palavra-passe</label>
+          <input id="admin-password" name="password" type="password" autocomplete="current-password" required>
+          <button class="submit-button" type="submit">Iniciar sessão <span aria-hidden="true">↗</span></button>
+          <p class="form-hint" id="admin-login-status" role="status" aria-live="polite"></p>
+        </form>
+        <a class="text-link admin-back-link" href="/">Voltar ao catálogo</a>
+      </div>
+    </section>
+
+    <section class="tab-panel secondary-panel management-panel" id="painel-gestao" role="tabpanel" aria-labelledby="tab-gestao" data-panel="gestao" hidden>
+      <div class="page-heading">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> ÁREA DE EDIÇÃO</p>
+        <h1>Gerir o<br><em>catálogo.</em></h1>
+        <p class="intro-text">Adicione aves e atualize as fotografias do criatório.</p>
+        <button class="text-button admin-logout" id="admin-logout" type="button">Terminar sessão</button>
+      </div>
+      <div class="management-tabs" role="tablist" aria-label="Conteúdo a gerir">
+        <button class="management-tab is-active" type="button" data-management-tab="birds">Aves</button>
+        <button class="management-tab" type="button" data-management-tab="identity">Capa e logótipo</button>
+        <button class="management-tab" type="button" data-management-tab="facilities">Instalações</button>
+        <button class="management-tab" type="button" data-management-tab="security">Segurança</button>
+      </div>
+      <section class="management-section" data-management-panel="birds">
+        <div class="management-heading"><h2 id="bird-form-title">Adicionar ave</h2><p>Todos os campos são necessários.</p></div>
+        <form class="editor-form" id="bird-form">
+          <input id="bird-id" name="id" type="hidden">
+          <div class="bird-image-fields">
+            <label class="image-field" for="bird-image"><span>Fotografia principal</span><img id="bird-image-preview" alt="Pré-visualização da fotografia selecionada" hidden><span class="file-prompt">Escolher fotografia</span><input id="bird-image" name="image" type="file" accept="image/*" required></label>
+            <label class="image-field additional-images-field" for="bird-extra-images"><span>Fotografias adicionais</span><span class="file-prompt">Pode selecionar várias</span><input id="bird-extra-images" type="file" accept="image/*" multiple><div class="selected-photo-previews" id="bird-extra-preview"></div></label>
+            <div class="existing-bird-photos" id="bird-existing-photos"></div>
+          </div>
+          <div class="form-fields">
+            <label for="bird-title">Título</label><input id="bird-title" name="title" required maxlength="80" placeholder="Ex.: Agapornis roseicollis">
+            <label for="bird-species">Espécie</label><input id="bird-species" name="species" required maxlength="100" placeholder="Nome comum ou científico">
+                        <label for="bird-mutation">Mutação</label><input id="bird-mutation" name="mutation" maxlength="100" placeholder="Ex.: Opalina, Arlequim (opcional)">
+            <div class="field-pair"><div><label for="bird-sex">Sexo</label><select id="bird-sex" name="sex" required><option value="">Selecionar</option><option>Macho</option><option>Fêmea</option><option>Indeterminado</option></select></div><div><label for="bird-age">Idade</label><input id="bird-age" name="age" required maxlength="40" placeholder="Ex.: 6 meses"></div></div>
+            <label for="bird-status">Disponibilidade</label>
+            <select id="bird-status" name="status" required>
+              <option value="available">Disponível</option>
+              <option value="reserved">Reservada</option>
+              <option value="sold">Vendida</option>
+            </select>
+            <label for="bird-description">Descrição</label><textarea id="bird-description" name="description" rows="4" required maxlength="500" placeholder="Conte um pouco sobre esta ave"></textarea>
+            <label for="bird-price">Preço (€)</label><input id="bird-price" name="price" type="number" min="0" step="0.01" required placeholder="0,00">
+            <div class="form-actions"><button class="submit-button" type="submit" id="bird-submit">Guardar ave <span aria-hidden="true">↗</span></button><button class="text-button" id="bird-cancel" type="button" hidden>Cancelar edição</button></div>
+          </div>
+        </form>
+        <div class="managed-list" id="managed-birds"></div>
+      </section>
+      <section class="management-section" data-management-panel="identity" hidden>
+        <div class="management-heading"><h2>Identidade do site</h2><p>Fotografias reais do seu criatório deixam o catálogo mais pessoal.</p></div>
+        <form class="settings-form" id="identity-form">
+          <label class="image-field" for="cover-file"><span>Imagens de capa</span><img id="cover-preview" alt="Pré-visualização das imagens de capa" hidden><span class="file-prompt">Escolher imagens de capa</span><input id="cover-file" type="file" accept="image/*" multiple></label>
+          <label class="image-field" for="logo-file"><span>Logótipo</span><img id="logo-preview" alt="Pré-visualização do logótipo" hidden><span class="file-prompt">Escolher logótipo</span><input id="logo-file" type="file" accept="image/*"></label>
+          <button class="submit-button" type="submit">Guardar identidade <span aria-hidden="true">↗</span></button>
+        </form>
+      </section>
+      <section class="management-section" data-management-panel="facilities" hidden>
+        <div class="management-heading"><h2>Fotografias das instalações</h2><p>Adicione uma imagem e uma legenda para cada espaço.</p></div>
+        <form class="settings-form" id="facility-form">
+          <label class="image-field" for="facility-file"><span>Fotografia</span><img id="facility-preview" alt="Pré-visualização da fotografia selecionada" hidden><span class="file-prompt">Escolher fotografia</span><input id="facility-file" type="file" accept="image/*" required></label>
+          <div class="form-fields"><label for="facility-caption">Legenda</label><input id="facility-caption" maxlength="100" required placeholder="Ex.: Viveiro exterior"><button class="submit-button" type="submit">Adicionar fotografia <span aria-hidden="true">↗</span></button></div>
+        </form>
+        <div class="managed-list" id="managed-facilities"></div>
+      </section>
+      <section class="management-section security-section" data-management-panel="security" hidden>
+        <div class="management-heading"><h2>Câmara Mercusys MC200</h2><p id="security-stream-status" role="status" aria-live="polite">Visualizador local desligado</p></div>
+        <div class="security-player" id="security-player">
+          <p>Inicia o visualizador local para abrir a transmissão da câmara nesta área.</p>
+        </div>
+        <div class="security-actions">
+          <button class="submit-button" id="security-viewer-start" type="button">Abrir visualizador neste painel <span aria-hidden="true">↗</span></button>
+          <a class="text-link" href="https://github.com/johnbarsoum77/mercusys-mc210-viewer" target="_blank" rel="noopener noreferrer">Obter viewer RTSP local <span aria-hidden="true">↗</span></a>
+        </div>
+        <p class="security-stream-hint">Configura a conta da câmara no visualizador local. Não introduzas as credenciais da câmara neste site nem as partilhes aqui.</p>
+      </section>
+      <p class="storage-note" role="status" id="storage-note">A gestão está protegida pela conta autorizada.</p>
+    </section>
+
+    <footer class="site-footer">
+      <a class="footer-brand" href="#inicio" data-open-tab="aves">Passarinhos da Fonte Longa</a>
+      <span>Feito com cuidado em Portugal</span>
+      <span>© <span id="year"></span> Fonte Longa</span>
+    </footer>
+
+    <aside class="chat-widget" id="chat-widget">
+      <section class="chat-panel" id="chat-panel" role="dialog" aria-labelledby="chat-title" aria-modal="false" hidden>
+        <header class="chat-header">
+          <div><p class="chat-kicker">PASSARINHOS DA FONTE LONGA</p><h2 id="chat-title">Ajuda a escolher</h2></div>
+          <button class="chat-close" id="chat-close" type="button" aria-label="Fechar conversa">×</button>
+        </header>
+        <div class="chat-messages" id="chat-messages" role="log" aria-live="polite" aria-relevant="additions text">
+          <p class="chat-message assistant-message">Olá! Posso ajudar a encontrar uma ave disponível ou esclarecer dúvidas com base nas informações do criatório.</p>
+        </div>
+        <div class="chat-suggestions" id="chat-suggestions">
+          <button type="button" data-chat-suggestion="Que aves estão disponíveis neste momento?">Ver aves disponíveis</button>
+          <button type="button" data-chat-suggestion="Ajuda-me a escolher uma companheira para o meu Ring Neck.">Ajuda com compatibilidade</button>
+        </div>
+        <form class="chat-form" id="chat-form">
+          <label class="visually-hidden" for="chat-input">Escreve a tua pergunta</label>
+          <textarea id="chat-input" name="message" rows="1" maxlength="1200" placeholder="Escreve a tua pergunta..." required></textarea>
+          <button class="chat-send" id="chat-send" type="submit" aria-label="Enviar pergunta" title="Enviar pergunta">Enviar</button>
+        </form>
+        <p class="chat-disclaimer">As recomendações genéticas são orientativas. Confirma a disponibilidade e compatibilidade connosco.</p>
+      </section>
+      <button class="chat-launcher" id="chat-launcher" type="button" aria-expanded="false" aria-controls="chat-panel">
+        <span class="chat-launcher-mark" aria-hidden="true">+</span><span>Ajuda a escolher uma ave</span>
+      </button>
+    </aside>
+  </body>
+</html>
