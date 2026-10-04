@@ -1,3 +1,4 @@
+
 import chatConfig from './chat-config.json' with { type: 'json' };
 import knowledgeBase from './chat-knowledge.json' with { type: 'json' };
 import { buildInstructions, retrieveKnowledge } from './chat-core.js';
