@@ -1,6 +1,6 @@
 {
   "model": "gpt-5-nano",
-  "maxOutputTokens": 320,
+  "maxOutputTokens": 1200,
   "maxMessages": 8,
   "maxMessageCharacters": 1200,
   "maxRequestBytes": 10000,

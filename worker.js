@@ -29,6 +29,17 @@ function allowedOrigins(env) {
   ]);
 }
 
+function isLocalOrigin(origin) {
+  try {
+    const url = new URL(origin);
+    return url.protocol === 'http:' &&
+      ['localhost', '127.0.0.1'].includes(url.hostname) &&
+      Boolean(url.port);
+  } catch {
+    return false;
+  }
+}
+
 function limitedByIp(request) {
   const now = Date.now();
   const ip = request.headers.get('CF-Connecting-IP') || 'local';
@@ -185,6 +196,7 @@ async function handleChat(request, env, origin) {
         model: chatConfig.model,
         instructions,
         input: messages,
+        reasoning: { effort: 'low' },
         max_output_tokens: chatConfig.maxOutputTokens,
         store: false
       }),
@@ -192,14 +204,53 @@ async function handleChat(request, env, origin) {
     });
 
     if (!response.ok) {
-      return jsonResponse({ error: response.status === 429 ? 'model_rate_limited' : 'model_unavailable' }, 502, origin);
+      let apiError = {};
+      try {
+        apiError = (await response.json()).error || {};
+      } catch {
+        // Keep the client response generic if the upstream error is not JSON.
+      }
+      const diagnostic = {
+        status: response.status,
+        code: apiError.code,
+        type: apiError.type,
+        param: apiError.param,
+        requestId: response.headers.get('x-request-id')
+      };
+      console.error('OpenAI Responses API request failed', diagnostic);
+      return jsonResponse({
+        error: response.status === 429 ? 'model_rate_limited' : 'model_unavailable',
+        ...(isLocalOrigin(origin) ? { diagnostic } : {})
+      }, 502, origin);
     }
     const result = await response.json();
     const answer = getResponseText(result);
-    if (!answer) return jsonResponse({ error: 'empty_model_response' }, 502, origin);
+    if (!answer) {
+      const output = Array.isArray(result.output) ? result.output : [];
+      const diagnostic = {
+        responseStatus: result.status,
+        outputTypes: output.map((item) => item?.type).filter(Boolean),
+        contentTypes: output.flatMap((item) => Array.isArray(item?.content) ? item.content : [])
+          .map((content) => content?.type)
+          .filter(Boolean),
+        incompleteReason: result.incomplete_details?.reason
+      };
+      console.error('OpenAI Responses API returned no extractable text', diagnostic);
+      return jsonResponse({
+        error: 'empty_model_response',
+        ...(isLocalOrigin(origin) ? { diagnostic } : {})
+      }, 502, origin);
+    }
     return jsonResponse({ answer }, 200, origin);
-  } catch {
-    return jsonResponse({ error: 'model_unavailable' }, 502, origin);
+  } catch (error) {
+    const diagnostic = {
+      name: error instanceof Error ? error.name : 'UnknownError'
+    };
+    console.error('OpenAI Responses API request failed before receiving a response', diagnostic);
+    return jsonResponse({
+      error: 'model_unavailable',
+      ...(isLocalOrigin(origin) ? { diagnostic } : {})
+    }, 502, origin);
   }
 }
 
@@ -208,7 +259,7 @@ export default {
     const url = new URL(request.url);
     if (url.pathname === '/api/chat') {
       const origin = request.headers.get('Origin');
-      if (!origin || !allowedOrigins(env).has(origin)) {
+      if (!origin || (!allowedOrigins(env).has(origin) && !isLocalOrigin(origin))) {
         return jsonResponse({ error: 'origin_not_allowed' }, 403);
       }
       return handleChat(request, env, origin);
